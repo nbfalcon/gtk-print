@@ -1,77 +1,89 @@
-#include <prompt_password.h>
 #include <print.h>
-#include <gtk/gtk.h>
-#include <unistd.h>
-#include <sys/types.h>
+#include <locale.h> /* setlocale */
+#include <glib/gi18n.h> /* _, N_ */
+#include <gtk/gtk.h> /* gtk_init_with_args */
+#include <unistd.h> /* fork */
+#include <sys/types.h> /* pid_t */
 
 int main(int argc, char **argv) {
-    static char *password_input_method = "gui";
-    static char *password = NULL;
-    static char *print_settings_file = NULL;
-    static char *print_settings_output_file = NULL;
-    static char *action = "dialog";
+    setlocale(LC_ALL, "");
+    bindtextdomain(GETTEXT_PACKAGE, DATADIR "/locale");
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
+
+    static const char *password_input_method = "gui";
+    static const char *password = NULL;
+    static const char *print_settings_file = NULL;
+    static const char *print_settings_output_file = NULL;
+    static const char *action = "dialog";
     static gboolean should_fork = FALSE;
     static const GOptionEntry options[] = {
         {
-            "method", 'm', 0, G_OPTION_ARG_STRING, &password_input_method,
-            "Specify how the password of an encrypted document will be queried. "
-            "Defaults to gui. Possible values are:\n"
-            "- 'none': do not query the password and fail if the file is encrypted\n"
-            "- 'getpass': use the POSIX getpass() function to acquire the password\n"
-            "- 'gui': get the password with a graphical dialog"
-            "method"
+            "password-query-method", 'm', 0, G_OPTION_ARG_STRING,
+            &password_input_method,
+            N_("Specify how the password of an encrypted document will be queried. "
+               "Defaults to gui. Possible values are:\n"
+               "- 'none': do not query the password and fail if the file is encrypted\n"
+               "- 'getpass': use the POSIX getpass() function to acquire the password\n"
+               "- 'gui': get the password with a graphical dialog"),
+            N_("method")
         },
         {
             "password", 'p', 0, G_OPTION_ARG_STRING, &password,
-            "Set a password that is tried before prompting the user.",
-            "password"
+            N_("Set a password that is tried before prompting the user."),
+            N_("password")
         },
         {
-            "load-settings", 's', 0, G_OPTION_ARG_FILENAME, &print_settings_file,
-            "Set the file from which the print settings will be loaded.", "file"
+            "load-settings", 's', 0, G_OPTION_ARG_FILENAME,
+            &print_settings_file,
+            N_("Set the file from which the print settings will be loaded."),
+            N_("file")
         },
         {
             "save-settings", 'S', 0, G_OPTION_ARG_FILENAME,
             &print_settings_output_file,
-            "Set the file to which the print settings will be saved a "
-            "successful print.",
-            "settings"
+            N_("Set the file to which the print settings will be saved on a "
+               "successful print."),
+            N_("settings")
         },
         {
             "action", 'a', 0, G_OPTION_ARG_STRING, &action,
-            "Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"
+            N_("Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"),
+            N_("action")
         },
         {
             "fork", 'F', 0, G_OPTION_ARG_NONE, &should_fork,
-            "Fork and exit after opening the specified document", NULL
+            N_("Fork and exit after opening the specified document"), NULL
         },
         { NULL }
     };
 
     GError *error = NULL;
-    gboolean argparse_result =
-        gtk_init_with_args(&argc, &argv, "document", options, NULL, &error);
+    gboolean argparse_result = gtk_init_with_args(
+        &argc, &argv, "document", options, GETTEXT_PACKAGE, &error);
     if (!argparse_result) {
-        fprintf(stderr, "error: parsing arguments failed: %s\n", error->message);
+        fprintf(stderr, _("error: parsing arguments failed: %s\n"),
+                error->message);
         g_error_free(error);
         return 1;
     }
 
     PassQueryMethod pass_input;
     if (!method_from_name(&pass_input, password_input_method)) {
-        fprintf(stderr, "error: invalid password input method '%s'\n", password_input_method);
+        fprintf(stderr, _("error: invalid password input method '%s'\n"),
+                password_input_method);
         return 1;
     }
 
     const char *program_name = (argc >= 1) ? argv[0] : "gtk-print";
     if (argc != 2) {
-        fprintf(stderr, "usage: %s [OPTIONS...] DOCUMENT\n", program_name);
+        fprintf(stderr, _("usage: %s [options...] document\n"), program_name);
         return 1;
     }
 
     PopplerDocument *doc = open_document_interactively(argv[1], pass_input, password, &error);
     if (doc == NULL) {
-        fprintf(stderr, "error: failed to open document: %s\n", error->message);
+        fprintf(stderr, _("error: failed to open document: %s\n"), error->message);
         g_error_free(error);
         return 2;
     }
@@ -82,7 +94,7 @@ int main(int argc, char **argv) {
         if (pid < 0) {
             g_object_unref(doc);
 
-            fputs("error: fork failed\n", stderr);
+            fputs(_("error: fork failed\n"), stderr);
             return 3;
         }
 
@@ -96,7 +108,7 @@ int main(int argc, char **argv) {
         if (settings == NULL) {
             g_object_unref(doc);
 
-            fprintf(stderr, "error: failed to load print settings: %s\n",
+            fprintf(stderr, _("error: failed to load print settings: %s\n"),
                     error->message);
             g_error_free(error);
             return 4;
@@ -110,7 +122,7 @@ int main(int argc, char **argv) {
         g_object_unref(doc);
         g_object_unref(settings);
 
-        fprintf(stderr, "error: failed to parse print action '%s'", action);
+        fprintf(stderr, _("error: failed to parse print action '%s'\n"), action);
         return 5;
     }
 
@@ -120,7 +132,7 @@ int main(int argc, char **argv) {
     if (print_result == GTK_PRINT_OPERATION_RESULT_ERROR) {
         g_object_unref(settings);
 
-        fprintf(stderr, "error: printing failed: %s\n", error->message);
+        fprintf(stderr, _("error: printing failed: %s\n"), error->message);
         g_error_free(error);
         return 6;
     }
@@ -130,7 +142,8 @@ int main(int argc, char **argv) {
                                         &error)) {
             g_object_unref(settings);
 
-            fprintf(stderr, "error: failed to save print settings: %s\n", error->message);
+            fprintf(stderr, _("error: failed to save print settings: %s\n"),
+                    error->message);
             g_error_free(error);
             return 7;
         }

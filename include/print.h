@@ -1,10 +1,10 @@
 #ifndef PRINT_H_INCLUDED
 #define PRINT_H_INCLUDED
 
-#include <prompt_password.h>
-#include <poppler.h>
-#include <gtk/gtk.h>
-#include <glib.h>
+#include <prompt_password.h> /* PassQueryMethod */
+#include <poppler.h> /* PopplerDocument */
+#include <gtk/gtk.h> /* GtkPrintOperation* */
+#include <glib.h> /* GError */
 
 GtkPrintOperationResult print_document(PopplerDocument *doc,
                                        GtkPrintSettings **settings,

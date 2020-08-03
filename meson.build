@@ -1,5 +1,9 @@
 project('gtk-print', 'c', default_options : ['c_std=c89'])
 
+subdir('po') # i18n
+add_project_arguments('-DDATADIR="@0@"'.format(get_option('datadir')),
+                      language : 'c')
+
 gtk_dep = dependency('gtk+-3.0')
 poppler_data_dep = dependency('poppler-data')
 poppler_glib_dep = dependency('poppler-glib')

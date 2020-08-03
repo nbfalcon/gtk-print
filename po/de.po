@@ -1,0 +1,162 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gtk-print package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gtk-print\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-03 14:20+0200\n"
+"PO-Revision-Date: 2020-08-03 14:21+0200\n"
+"Last-Translator: Nikita Bloshchanevich <nikblos@outlook.com>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.c:24
+msgid ""
+"Specify how the password of an encrypted document will be queried. Defaults "
+"to gui. Possible values are:\n"
+"- 'none': do not query the password and fail if the file is encrypted\n"
+"- 'getpass': use the POSIX getpass() function to acquire the password\n"
+"- 'gui': get the password with a graphical dialog"
+msgstr ""
+"Wähle, wie das Kennwort eines Passwortgeschützten Dokumentes abgefragt "
+"werden\n"
+"soll. Standardmäßig 'gui'. Mögliche Werte sind:\n"
+"- 'none': frage nicht nach dem Kennwort und scheitere, falls das Dokument\n"
+"geschützt ist\n"
+"- 'getpass': verwende die in POSIX definierte 'getpass' Funktion um das "
+"Passwort\n"
+"abzufragen\n"
+"- 'gui': erstelle einen graphischen Dialog, in dem der Nutzer das Kennwort\n"
+"eingeben kann"
+
+#: src/main.c:29
+msgid "method"
+msgstr "Methode"
+
+#: src/main.c:33
+msgid "Set a password that is tried before prompting the user."
+msgstr ""
+"Setze das Passwort, welches probiert wird, bevor der Nutzer gefragt wird."
+
+#: src/main.c:34
+msgid "password"
+msgstr "Kennwort"
+
+#: src/main.c:39
+msgid "Set the file from which the print settings will be loaded."
+msgstr "Gib die Datei an, aus welcher die Druckeinstellungen geladen werden."
+
+#: src/main.c:40
+msgid "file"
+msgstr "Datei"
+
+#: src/main.c:45
+msgid ""
+"Set the file to which the print settings will be saved on a successful print."
+msgstr ""
+"Setze die Datei, in welche die Druckdialogseinstellungen bei einem "
+"erfolgreichen Druck\n"
+"gespeichert werden"
+
+#: src/main.c:47
+msgid "settings"
+msgstr "Einstellungen"
+
+#: src/main.c:51
+msgid ""
+"Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"
+msgstr ""
+"Wähle, was das Programm tun soll. Möglichkeiten sind:\n"
+"- 'print': drucke das angegebene Dokument direkt, ohne einen Druckdialog zu\n"
+"erstellen\n"
+"- 'preview': zeige das Dokument an, ohne einen Druckdialog zu erstellen\n"
+"- 'dialog': erstelle einen GTK-basierten Druckdialog"
+
+#: src/main.c:52
+msgid "action"
+msgstr "Aktion"
+
+#: src/main.c:56
+msgid "Fork and exit after opening the specified document"
+msgstr ""
+"Rufe fork() auf und schließe den main-thread nachdem das angegebene Dokument "
+"geöffnet worden ist."
+
+#: src/main.c:65
+#, c-format
+msgid "error: parsing arguments failed: %s\n"
+msgstr "Fehler: Das Parsen der Argumente scheiterte: %s\n"
+
+#: src/main.c:73
+#, c-format
+msgid "error: invalid password input method '%s'\n"
+msgstr ""
+"Fehler: Die Angegebene Kennwortabfragemethode '%s' ist nicht bekannt.\n"
+
+#: src/main.c:80
+#, c-format
+msgid "usage: %s [options...] document\n"
+msgstr "Verwendung: %s [Optionen...] [Dokument]\n"
+
+#: src/main.c:86
+#, c-format
+msgid "error: failed to open document: %s\n"
+msgstr "Fehler: Das Dokument konnte nicht geöffnet werden: %s\n"
+
+#: src/main.c:97
+msgid "error: fork failed\n"
+msgstr "Fehler: fork() scheiterte\n"
+
+#: src/main.c:111
+#, c-format
+msgid "error: failed to load print settings: %s\n"
+msgstr "Fehler: Die Druckeinstellungen konnten nicht geladen werden: %s\n"
+
+#: src/main.c:125
+#, fuzzy, c-format
+msgid "error: failed to parse print action '%s'\n"
+msgstr "Fehler: Die Druckaktion '%s' ist unbekannt."
+
+#: src/main.c:135
+#, c-format
+msgid "error: printing failed: %s\n"
+msgstr "Fehler: Das Drucken scheiterte: %s\n"
+
+#: src/main.c:145
+#, c-format
+msgid "error: failed to save print settings: %s\n"
+msgstr "Fehler: Die Druckeinstellungen konnten nicht gespeichert werden.\n"
+
+#: src/prompt_password.c:42
+msgid "Password required"
+msgstr "Ein Kennwort wird benötigt"
+
+#: src/prompt_password.c:46
+#, c-format
+msgid ""
+"The document “%s“ is locked and requires a password before it can be printed."
+msgstr ""
+"Das Dokument “%s“ ist Kennwortgeschützt und braucht ein Password um "
+"ausgedruckt zu werden."
+
+#: src/prompt_password.c:49
+msgid "Unlock"
+msgstr "Freischalten"
+
+#: src/prompt_password.c:51
+msgid "Password: "
+msgstr "Kennwort: "
+
+#: src/prompt_password.c:91
+msgid "Document password: "
+msgstr "Kennwort für das Dokument: "
+
+#~ msgid "usage: %s [OPTIONS...] DOCUMENT\n"
+#~ msgstr "Verwendung: %s [Optionen] [Dokument]\n"

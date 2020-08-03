@@ -72,11 +72,13 @@ PopplerDocument *open_document_interactively(const char *path, PassQueryMethod m
 }
 
 /**
- * @brief Prints a PopplerDocument with a GtkPrintOperation.
+ * Prints a PopplerDocument with a GtkPrintOperation.
  * @param doc A pointer to the PopplerDocument that is to be printed. This is
  * just a reference, and this function does not take ownership of it.
  * @param error If the print operation fails and error is not NULL, a GError
  * describing the failure will be written to (*error).
+ * @param action Specifies what is to be done. GTK_PRINT_OPERATION_ACTION_EXPORT
+ * is unsupported and will fail.
  * @return The result of the internal call to gtk_print_operation_run is
  * returned.
  */

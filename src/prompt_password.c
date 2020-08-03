@@ -1,4 +1,5 @@
 #include <prompt_password.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <string.h>
@@ -9,7 +10,7 @@ bool method_from_name(PassQueryMethod *out, const char *name) {
     else if (strcmp(name, "getpass") == 0)
         *out = GETPASS;
     else if (strcmp(name, "none") == 0)
-      *out = NONE;
+        *out = NONE;
     else
         return false;
 
@@ -36,18 +37,18 @@ static gboolean h_entry_return(GtkAccelGroup *accel_group_,
 }
 
 char *gtk_prompt_password(const char *document) {
-    GtkWidget *w_dialog = gtk_message_dialog_new(
-        NULL, (GtkDialogFlags)0, GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
-        "Password required");
+    GtkWidget *w_dialog =
+        gtk_message_dialog_new(NULL, (GtkDialogFlags)0, GTK_MESSAGE_QUESTION,
+                               GTK_BUTTONS_CANCEL, _("Password required"));
     GtkMessageDialog *dialog = GTK_MESSAGE_DIALOG(w_dialog);
     gtk_message_dialog_format_secondary_text(
         dialog,
-        "The document “%s“ is locked and requires a password before it can "
-        "be printed.",
+        _("The document “%s“ is locked and requires a password before it "
+          "can be printed."),
         document);
-    gtk_dialog_add_button(GTK_DIALOG(dialog), "Unlock", 1);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Unlock"), 1);
 
-    GtkLabel *password_label = GTK_LABEL(gtk_label_new("Password: "));
+    GtkLabel *password_label = GTK_LABEL(gtk_label_new(_("Password: ")));
 
     GtkEntry *password_entry = GTK_ENTRY(gtk_entry_new());
     gtk_entry_set_visibility(password_entry, FALSE);
@@ -87,7 +88,7 @@ char *document_prompt_password(PassQueryMethod m, const char *document) {
 
     switch (m) {
     case GETPASS:
-        return getpass("Document password: ");
+        return getpass(_("Document password: "));
     case GUI:
         return gtk_prompt_password(document);
     case NONE:

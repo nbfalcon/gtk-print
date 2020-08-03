@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gtk-print package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gtk-print\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-03 14:20+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.c:24
+msgid ""
+"Specify how the password of an encrypted document will be queried. Defaults "
+"to gui. Possible values are:\n"
+"- 'none': do not query the password and fail if the file is encrypted\n"
+"- 'getpass': use the POSIX getpass() function to acquire the password\n"
+"- 'gui': get the password with a graphical dialog"
+msgstr ""
+
+#: src/main.c:29
+msgid "method"
+msgstr ""
+
+#: src/main.c:33
+msgid "Set a password that is tried before prompting the user."
+msgstr ""
+
+#: src/main.c:34
+msgid "password"
+msgstr ""
+
+#: src/main.c:39
+msgid "Set the file from which the print settings will be loaded."
+msgstr ""
+
+#: src/main.c:40
+msgid "file"
+msgstr ""
+
+#: src/main.c:45
+msgid ""
+"Set the file to which the print settings will be saved on a successful print."
+msgstr ""
+
+#: src/main.c:47
+msgid "settings"
+msgstr ""
+
+#: src/main.c:51
+msgid ""
+"Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"
+msgstr ""
+
+#: src/main.c:52
+msgid "action"
+msgstr ""
+
+#: src/main.c:56
+msgid "Fork and exit after opening the specified document"
+msgstr ""
+
+#: src/main.c:65
+#, c-format
+msgid "error: parsing arguments failed: %s\n"
+msgstr ""
+
+#: src/main.c:73
+#, c-format
+msgid "error: invalid password input method '%s'\n"
+msgstr ""
+
+#: src/main.c:80
+#, c-format
+msgid "usage: %s [options...] document\n"
+msgstr ""
+
+#: src/main.c:86
+#, c-format
+msgid "error: failed to open document: %s\n"
+msgstr ""
+
+#: src/main.c:97
+msgid "error: fork failed\n"
+msgstr ""
+
+#: src/main.c:111
+#, c-format
+msgid "error: failed to load print settings: %s\n"
+msgstr ""
+
+#: src/main.c:125
+#, c-format
+msgid "error: failed to parse print action '%s'\n"
+msgstr ""
+
+#: src/main.c:135
+#, c-format
+msgid "error: printing failed: %s\n"
+msgstr ""
+
+#: src/main.c:145
+#, c-format
+msgid "error: failed to save print settings: %s\n"
+msgstr ""
+
+#: src/prompt_password.c:42
+msgid "Password required"
+msgstr ""
+
+#: src/prompt_password.c:46
+#, c-format
+msgid ""
+"The document “%s“ is locked and requires a password before it can be printed."
+msgstr ""
+
+#: src/prompt_password.c:49
+msgid "Unlock"
+msgstr ""
+
+#: src/prompt_password.c:51
+msgid "Password: "
+msgstr ""
+
+#: src/prompt_password.c:91
+msgid "Document password: "
+msgstr ""
