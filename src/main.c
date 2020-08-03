@@ -137,6 +137,11 @@ int main(int argc, char **argv) {
         return 6;
     }
 
+    if (print_result == GTK_PRINT_OPERATION_RESULT_APPLY)
+        puts("apply");
+    else
+        puts("cancel");
+
     if (print_settings_output_file != NULL) {
         if (!gtk_print_settings_to_file(settings, print_settings_output_file,
                                         &error)) {
