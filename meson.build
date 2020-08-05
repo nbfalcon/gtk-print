@@ -1,4 +1,5 @@
-project('gtk-print', 'c', default_options : ['c_std=c89'])
+project('gtk-print', 'c', default_options : ['c_std=c89'],
+                          license : 'MIT', meson_version : '>=0.55.0')
 
 subdir('po') # i18n
 add_project_arguments('-DDATADIR="@0@"'.format(get_option('datadir')),

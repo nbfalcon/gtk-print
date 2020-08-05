@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Translation for gtk-print, a CLI utility to make a gtk-based print dialog.
+# Copyright (C) 2020 Nikita Bloshchanevich
 # This file is distributed under the same license as the gtk-print package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Nikita Bloshchanevich <nikblos@outlook.com>, 2020.
 #
 #, fuzzy
 msgid ""
@@ -25,16 +25,6 @@ msgid ""
 "- 'getpass': use the POSIX getpass() function to acquire the password\n"
 "- 'gui': get the password with a graphical dialog"
 msgstr ""
-"Wähle, wie das Kennwort eines Passwortgeschützten Dokumentes abgefragt "
-"werden\n"
-"soll. Standardmäßig 'gui'. Mögliche Werte sind:\n"
-"- 'none': frage nicht nach dem Kennwort und scheitere, falls das Dokument\n"
-"geschützt ist\n"
-"- 'getpass': verwende die in POSIX definierte 'getpass' Funktion um das "
-"Passwort\n"
-"abzufragen\n"
-"- 'gui': erstelle einen graphischen Dialog, in dem der Nutzer das Kennwort\n"
-"eingeben kann"
 
 #: src/main.c:29
 msgid "method"
