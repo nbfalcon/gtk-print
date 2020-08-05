@@ -1,9 +1,9 @@
-#include <print.h>
-#include <prompt_password.h>
 #include <gtk/gtk.h>
 #include <poppler-document.h>
 #include <poppler-page.h>
 #include <poppler.h>
+#include <print.h>
+#include <prompt_password.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

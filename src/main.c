@@ -1,9 +1,12 @@
-#include <print.h>
-#include <locale.h> /* setlocale */
 #include <glib/gi18n.h> /* _, N_ */
-#include <gtk/gtk.h> /* gtk_init_with_args */
-#include <unistd.h> /* fork */
+#include <gtk/gtk.h>    /* gtk_init_with_args */
+#include <locale.h>     /* setlocale */
+#include <print.h>
+
+#ifdef CONFIG_ENABLE_FORK
 #include <sys/types.h> /* pid_t */
+#include <unistd.h>    /* fork */
+#endif
 
 int main(int argc, char **argv) {
     setlocale(LC_ALL, "");
@@ -16,7 +19,9 @@ int main(int argc, char **argv) {
     static const char *print_settings_file = NULL;
     static const char *print_settings_output_file = NULL;
     static const char *action = "dialog";
+#ifdef CONFIG_ENABLE_FORK
     static gboolean should_fork = FALSE;
+#endif
     static const GOptionEntry options[] = {
         {
             "password-query-method", 'm', 0, G_OPTION_ARG_STRING,
@@ -51,10 +56,12 @@ int main(int argc, char **argv) {
             N_("Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"),
             N_("action")
         },
+#ifdef CONFIG_ENABLE_FORK
         {
             "fork", 'F', 0, G_OPTION_ARG_NONE, &should_fork,
             N_("Fork and exit after opening the specified document"), NULL
         },
+#endif
         { NULL }
     };
 
@@ -88,6 +95,7 @@ int main(int argc, char **argv) {
         return 2;
     }
 
+#ifdef CONFIG_ENABLE_FORK
     if (should_fork) {
         pid_t pid = fork();
 
@@ -101,6 +109,7 @@ int main(int argc, char **argv) {
         if (pid != 0) /* Exit main thread, leaving only the child */
             return 0;
     }
+#endif
 
     GtkPrintSettings *settings;
     if (print_settings_file != NULL) {

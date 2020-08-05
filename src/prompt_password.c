@@ -1,14 +1,16 @@
-#include <prompt_password.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <prompt_password.h>
 #include <stdio.h>
 #include <string.h>
 
 bool method_from_name(PassQueryMethod *out, const char *name) {
     if (strcmp(name, "gui") == 0)
         *out = GUI;
+#ifdef CONFIG_ENABLE_GETPASS
     else if (strcmp(name, "getpass") == 0)
         *out = GETPASS;
+#endif
     else if (strcmp(name, "none") == 0)
         *out = NONE;
     else
@@ -17,6 +19,15 @@ bool method_from_name(PassQueryMethod *out, const char *name) {
     return true;
 }
 
+#ifdef CONFIG_USE_STRDUP
+static char *dup_str(const char *string) {
+#ifdef _WIN32
+    return _strdup(string);
+#else
+    return strdup(string);
+#endif
+}
+#else
 static char *dup_str(const char *string) {
     size_t new_len = strlen(string) + 1; /* + nul byte */
 
@@ -26,6 +37,7 @@ static char *dup_str(const char *string) {
 
     return out;
 }
+#endif
 
 static gboolean h_entry_return(GtkAccelGroup *accel_group_,
                                GObject *o_dialog, guint keyval_,
@@ -84,11 +96,15 @@ char *gtk_prompt_password(const char *document) {
 }
 
 char *document_prompt_password(PassQueryMethod m, const char *document) {
-    char *getpass(const char *); /* HACK: strdup declared here */
+#ifdef CONFIG_ENABLE_GETPASS
+    char *getpass(const char *); /* HACK: getpass declared here */
+#endif
 
     switch (m) {
+#ifdef CONFIG_ENABLE_GETPASS
     case GETPASS:
         return getpass(_("Document password: "));
+#endif
     case GUI:
         return gtk_prompt_password(document);
     case NONE:
@@ -100,7 +116,9 @@ char *document_prompt_password(PassQueryMethod m, const char *document) {
 
 void free_password(PassQueryMethod m, char *password) {
     switch (m) {
+#ifdef CONFIG_ENABLE_GETPASS
     case GETPASS: /* static buffer */
+#endif
     case NONE:    /* no password */
         break;
     case GUI:

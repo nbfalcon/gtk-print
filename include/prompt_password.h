@@ -5,7 +5,9 @@
 
 typedef enum {
     NONE,    /* Don't ask the user for the password and just quit */
+#ifdef CONFIG_ENABLE_GETPASS
     GETPASS, /* Acquire the password with getpass */
+#endif
     GUI,     /* Show a graphical password input dialog */
 } PassQueryMethod;
 

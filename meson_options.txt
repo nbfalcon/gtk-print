@@ -1,0 +1,7 @@
+option('enable-fork', type : 'boolean', value : true,
+       description : 'Enable the --fork option.')
+option('enable-getpass', type : 'boolean', value : true,
+       description : 'Enable using getpass() to ask for the password.')
+option('use-strdup', type : 'boolean', value : true,
+       description : 'Allow using POSIX strdup (windows: _strdup) directly,'
+                     + 'instead of an ad-hoc equivalent')
