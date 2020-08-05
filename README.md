@@ -73,5 +73,5 @@ on the meson command line):
 # Translation
 gtk-print is set up to handle translations with gettext. An example translation
 for German is provided.
-  
+
 Happy scripting!
