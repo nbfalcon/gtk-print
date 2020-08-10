@@ -34,9 +34,10 @@ specified with the '\--password-query-method=[method]' option:
 The initial settings for the print dialog can be loaded from a file. Likewise,
 the user's settings may be written to a file. This can be used to remember the
 user's print settings between invocations, improving the user experience. The
-settings to do so are '\--load-settings=[path]' and '--save-settings=[save path]'.
-Note that print settings are always saved to [save path], even if the cancel
-button is pressed in the print dialog.
+settings to do so are '\--load-settings=[path]' and '--save-settings=[save
+path]'. Settings are only saved to [save path] if the user presses the "Print"
+or "Preview" buttons. This can be overridden with '\--always-save-settings', in
+which case the user's print settings are always saved.
 
 Lastly, there is the '\--fork' option, which causes the utility to fork itself
 after opening the selected document and to exit the main thread immediately

@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
     static const char *password = NULL;
     static const char *print_settings_file = NULL;
     static const char *print_settings_output_file = NULL;
+    static gboolean always_save_settings = FALSE;
     static const char *action = "dialog";
 #ifdef CONFIG_ENABLE_FORK
     static gboolean should_fork = FALSE;
@@ -75,6 +76,12 @@ int main(int argc, char **argv) {
             N_("settings")
         },
         {
+            "always-save-settings", 'A', 0, G_OPTION_ARG_NONE,
+            &always_save_settings,
+            N_("Save the print settings even if the user presses \"Cancel\"."),
+            NULL
+        },
+        {
             "action", 'a', 0, G_OPTION_ARG_STRING, &action,
             N_("Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"),
             N_("action")
@@ -82,7 +89,7 @@ int main(int argc, char **argv) {
 #ifdef CONFIG_ENABLE_FORK
         {
             "fork", 'F', 0, G_OPTION_ARG_NONE, &should_fork,
-            N_("Fork and exit after opening the specified document"), NULL
+            N_("Fork and exit after opening the specified document."), NULL
         },
 #endif
         { NULL }
@@ -174,7 +181,9 @@ int main(int argc, char **argv) {
     else
         puts("cancel");
 
-    if (print_settings_output_file != NULL) {
+    if (print_settings_output_file != NULL
+        && (always_save_settings
+            || print_result == GTK_PRINT_OPERATION_RESULT_APPLY)) {
         if (!gtk_print_settings_to_file(settings, print_settings_output_file,
                                         &error)) {
             g_object_unref(settings);
