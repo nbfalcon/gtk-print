@@ -39,8 +39,9 @@ int main(int argc, char **argv) {
 
     static const char *password_input_method = "gui";
     static const char *password = NULL;
-    static const char *print_settings_file = NULL;
-    static const char *print_settings_output_file = NULL;
+    static const char *base_print_settings_file = NULL;
+    static const char *arg_print_settings_file = NULL;
+    static const char *arg_print_settings_output_file = NULL;
     static gboolean always_save_settings = FALSE;
     static const char *action = "dialog";
 #ifdef CONFIG_ENABLE_FORK
@@ -63,14 +64,19 @@ int main(int argc, char **argv) {
             N_("password")
         },
         {
+            "settings-file", 'P', 0, G_OPTION_ARG_FILENAME,
+            &base_print_settings_file,
+            N_("Set the file to store print settings."), N_("base-settings-file")
+        },
+        {
             "load-settings", 's', 0, G_OPTION_ARG_FILENAME,
-            &print_settings_file,
+            &arg_print_settings_file,
             N_("Set the file from which the print settings will be loaded."),
             N_("file")
         },
         {
             "save-settings", 'S', 0, G_OPTION_ARG_FILENAME,
-            &print_settings_output_file,
+            &arg_print_settings_output_file,
             N_("Set the file to which the print settings will be saved on a "
                "successful print."),
             N_("settings")
@@ -104,6 +110,13 @@ int main(int argc, char **argv) {
         g_error_free(error);
         return 1;
     }
+
+    const char *print_settings_file = arg_print_settings_file;
+    if (print_settings_file == NULL)
+        print_settings_file = base_print_settings_file;
+    const char *print_settings_output_file = arg_print_settings_output_file;
+    if (print_settings_output_file == NULL)
+        print_settings_output_file = base_print_settings_file;
 
     PassQueryMethod pass_input;
     if (!method_from_name(&pass_input, password_input_method)) {
@@ -144,10 +157,14 @@ int main(int argc, char **argv) {
     GtkPrintSettings *settings;
     if (print_settings_file != NULL) {
         settings = gtk_print_settings_new_from_file(print_settings_file, &error);
-        /* Usually, --load-settings and --save-settings are used together.
-         * Before they could have been saved though, that file does not exist,
-         * so ignore ENOENT. */
-        if (settings == NULL && error->code == G_FILE_ERROR_NOENT) {
+        /* if arg_print_settings_(output_)file are both NULL, that means that
+         * they got their value from --settings-file: load settings from and
+         * save settings to that file. ENOENT is normal in that case, for
+         * example on the first run of gtk-print or if the user deletes the
+         * settings file. */
+        if (arg_print_settings_file == NULL
+            && arg_print_settings_output_file == NULL
+            && settings == NULL && error->code == G_FILE_ERROR_NOENT) {
             g_error_free(error);
             error = NULL;
         }

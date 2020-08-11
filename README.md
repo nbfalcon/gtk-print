@@ -3,6 +3,8 @@
 print dialog from their scripts.
 
 # Usage
+
+## CLI
 The program is invoked as `gtk-print [options...] document`. The program will
 then execute the specified action on document.
 Available actions (specified with the '\--action=[action]' or '-a' option) are:
@@ -34,10 +36,14 @@ specified with the '\--password-query-method=[method]' option:
 The initial settings for the print dialog can be loaded from a file. Likewise,
 the user's settings may be written to a file. This can be used to remember the
 user's print settings between invocations, improving the user experience. The
-settings to do so are '\--load-settings=[path]' and '--save-settings=[save
-path]'. Settings are only saved to [save path] if the user presses the "Print"
-or "Preview" buttons. This can be overridden with '\--always-save-settings', in
-which case the user's print settings are always saved.
+settings for that is '\--settings-file=[settings-file]'. gtk-print will then
+remember print settings in [settings-file]. It need not exist when gtk-print is
+invoked. If you need more fine grained control, '\--load-settings' and
+'\--save-settings' can be specified additionally, overriding [settings-file] for
+their respective operations. Note that if '\--load-settings' is used, the file
+specified by it must already exist. Print settings are only saved if the user
+does not cancel the dialog, unless the '\--always-save-settings' option is
+specified.
 
 Lastly, there is the '\--fork' option, which causes the utility to fork itself
 after opening the selected document and to exit the main thread immediately
@@ -53,6 +59,22 @@ The script prints the action the user chose in the print dialog: 'cancel', if
 the user pressed the cancel button in the print dialog, and 'apply' if they
 pressed print or preview. The result is always 'apply' if an action other than
 'dialog' is specified.
+
+## Emacs (org-mode)
+gtk-print may be used with org-mode. To do so, load
+[emacs/gtk-print.el](emacs/gtk-print.el) or add [emacs/](emacs/) to your load
+path and load [emacs/gtk-print-ox.el](emacs/gtk-print-ox.el) after that. You can
+then add a printing menu entry to ox-latex by evaluating (gtk-print-ox-inject).
+For example, you can add the following snippet to your init.el:
+```elisp
+(load-file "<path-to-gtk-print>/emacs/gtk-print.el")
+(load-file "<path-to-gtk-print>/emacs/gtk-print-ox.el")
+(gtk-print-ox-inject)
+```
+To remove the newly added exporter, evaluate:
+```elisp
+(gtk-print-ox-remove)
+```
 
 # Compiling
 This project uses the meson build system. To compile, just run:

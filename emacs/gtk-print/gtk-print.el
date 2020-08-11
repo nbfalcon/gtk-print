@@ -22,8 +22,7 @@ may be deleted once this function returns."
            nil nil nil "--fork"
            "--password-query-method=getpass"
            ,@(when settings-file
-             (list (concat "--load-settings=" settings-file)
-                   (concat "--save-settings=" settings-file)))
+             (list (concat "--settings-file=" settings-file)))
            "--" ,path)))
 
 (provide 'gtk-print)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtk-print\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-10 21:22+0200\n"
+"POT-Creation-Date: 2020-08-11 14:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:53
+#: src/main.c:54
 msgid ""
 "Specify how the password of an encrypted document will be queried. Defaults "
 "to gui. Possible values are:\n"
@@ -26,92 +26,100 @@ msgid ""
 "- 'gui': get the password with a graphical dialog"
 msgstr ""
 
-#: src/main.c:58
+#: src/main.c:59
 msgid "method"
 msgstr ""
 
-#: src/main.c:62
+#: src/main.c:63
 msgid "Set a password that is tried before prompting the user."
 msgstr ""
 
-#: src/main.c:63
+#: src/main.c:64
 msgid "password"
 msgstr ""
 
-#: src/main.c:68
-msgid "Set the file from which the print settings will be loaded."
+#: src/main.c:69
+msgid "Set the file to store print settings."
 msgstr ""
 
 #: src/main.c:69
-msgid "file"
+msgid "base-settings-file"
 msgstr ""
 
 #: src/main.c:74
+msgid "Set the file from which the print settings will be loaded."
+msgstr ""
+
+#: src/main.c:75
+msgid "file"
+msgstr ""
+
+#: src/main.c:80
 msgid ""
 "Set the file to which the print settings will be saved on a successful print."
 msgstr ""
 
-#: src/main.c:76
+#: src/main.c:82
 msgid "settings"
 msgstr ""
 
-#: src/main.c:81
+#: src/main.c:87
 msgid "Save the print settings even if the user presses \"Cancel\"."
 msgstr ""
 
-#: src/main.c:86
+#: src/main.c:92
 msgid ""
 "Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"
 msgstr ""
 
-#: src/main.c:87
+#: src/main.c:93
 msgid "action"
 msgstr ""
 
-#: src/main.c:92
+#: src/main.c:98
 msgid "Fork and exit after opening the specified document."
 msgstr ""
 
-#: src/main.c:102
+#: src/main.c:108
 #, c-format
 msgid "error: parsing arguments failed: %s\n"
 msgstr ""
 
-#: src/main.c:110
+#: src/main.c:123
 #, c-format
 msgid "error: invalid password input method '%s'\n"
 msgstr ""
 
-#: src/main.c:117
+#: src/main.c:130
 #, c-format
 msgid "usage: %s [options...] document\n"
 msgstr ""
 
-#: src/main.c:123
+#: src/main.c:136
 #, c-format
 msgid "error: failed to open document: %s\n"
 msgstr ""
 
-#: src/main.c:135
+#: src/main.c:148
 msgid "error: fork failed\n"
-msgstr ""
-
-#: src/main.c:150
-#, c-format
-msgid "error: failed to load print settings: %s\n"
-msgstr ""
-
-#: src/main.c:164
-#, c-format
-msgid "error: failed to parse print action '%s'\n"
 msgstr ""
 
 #: src/main.c:174
 #, c-format
+msgid "error: failed to load print settings: %s\n"
+msgstr ""
+
+#: src/main.c:188
+#, c-format
+msgid "error: failed to parse print action '%s'\n"
+msgstr ""
+
+#: src/main.c:198
+#, c-format
 msgid "error: printing failed: %s\n"
 msgstr ""
 
-#: src/main.c:191
+#: src/main.c:215
 #, c-format
 msgid "error: failed to save print settings: %s\n"
 msgstr ""
