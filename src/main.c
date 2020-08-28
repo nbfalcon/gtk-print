@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
                "Defaults to gui. Possible values are:\n"
                "- 'none': do not query the password and fail if the file is encrypted\n"
                "- 'getpass': use the POSIX getpass() function to acquire the password\n"
+               "- 'getpass-cli': like 'getpass', but with a fixed prompt\n"
                "- 'gui': get the password with a graphical dialog"),
             N_("method")
         },

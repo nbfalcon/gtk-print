@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtk-print\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-11 14:55+0200\n"
+"POT-Creation-Date: 2020-08-28 18:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,125 +23,126 @@ msgid ""
 "to gui. Possible values are:\n"
 "- 'none': do not query the password and fail if the file is encrypted\n"
 "- 'getpass': use the POSIX getpass() function to acquire the password\n"
+"- 'getpass-cli': like 'getpass', but with a fixed prompt\n"
 "- 'gui': get the password with a graphical dialog"
 msgstr ""
 
-#: src/main.c:59
+#: src/main.c:60
 msgid "method"
 msgstr ""
 
-#: src/main.c:63
+#: src/main.c:64
 msgid "Set a password that is tried before prompting the user."
 msgstr ""
 
-#: src/main.c:64
+#: src/main.c:65
 msgid "password"
 msgstr ""
 
-#: src/main.c:69
+#: src/main.c:70
 msgid "Set the file to store print settings."
 msgstr ""
 
-#: src/main.c:69
+#: src/main.c:70
 msgid "base-settings-file"
 msgstr ""
 
-#: src/main.c:74
+#: src/main.c:75
 msgid "Set the file from which the print settings will be loaded."
 msgstr ""
 
-#: src/main.c:75
+#: src/main.c:76
 msgid "file"
 msgstr ""
 
-#: src/main.c:80
+#: src/main.c:81
 msgid ""
 "Set the file to which the print settings will be saved on a successful print."
 msgstr ""
 
-#: src/main.c:82
+#: src/main.c:83
 msgid "settings"
 msgstr ""
 
-#: src/main.c:87
+#: src/main.c:88
 msgid "Save the print settings even if the user presses \"Cancel\"."
 msgstr ""
 
-#: src/main.c:92
+#: src/main.c:93
 msgid ""
 "Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"
 msgstr ""
 
-#: src/main.c:93
+#: src/main.c:94
 msgid "action"
 msgstr ""
 
-#: src/main.c:98
+#: src/main.c:99
 msgid "Fork and exit after opening the specified document."
 msgstr ""
 
-#: src/main.c:108
+#: src/main.c:109
 #, c-format
 msgid "error: parsing arguments failed: %s\n"
 msgstr ""
 
-#: src/main.c:123
+#: src/main.c:124
 #, c-format
 msgid "error: invalid password input method '%s'\n"
 msgstr ""
 
-#: src/main.c:130
+#: src/main.c:131
 #, c-format
 msgid "usage: %s [options...] document\n"
 msgstr ""
 
-#: src/main.c:136
+#: src/main.c:137
 #, c-format
 msgid "error: failed to open document: %s\n"
 msgstr ""
 
-#: src/main.c:148
+#: src/main.c:149
 msgid "error: fork failed\n"
 msgstr ""
 
-#: src/main.c:174
+#: src/main.c:175
 #, c-format
 msgid "error: failed to load print settings: %s\n"
 msgstr ""
 
-#: src/main.c:188
+#: src/main.c:189
 #, c-format
 msgid "error: failed to parse print action '%s'\n"
 msgstr ""
 
-#: src/main.c:198
+#: src/main.c:199
 #, c-format
 msgid "error: printing failed: %s\n"
 msgstr ""
 
-#: src/main.c:215
+#: src/main.c:216
 #, c-format
 msgid "error: failed to save print settings: %s\n"
 msgstr ""
 
-#: src/prompt_password.c:77
+#: src/prompt_password.c:79
 msgid "Password required"
 msgstr ""
 
-#: src/prompt_password.c:81
+#: src/prompt_password.c:83
 #, c-format
 msgid ""
 "The document “%s“ is locked and requires a password before it can be printed."
 msgstr ""
 
-#: src/prompt_password.c:84
+#: src/prompt_password.c:86
 msgid "Unlock"
 msgstr ""
 
-#: src/prompt_password.c:86
+#: src/prompt_password.c:88
 msgid "Password: "
 msgstr ""
 
-#: src/prompt_password.c:129
+#: src/prompt_password.c:131
 msgid "Document password: "
 msgstr ""

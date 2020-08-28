@@ -27,11 +27,13 @@
 #include <stdbool.h>
 
 typedef enum {
-    NONE,    /* Don't ask the user for the password and just quit */
+    NONE, /* Don't ask the user for the password and just quit */
 #ifdef CONFIG_ENABLE_GETPASS
     GETPASS, /* Acquire the password with getpass */
+    /* Like GETPASS, but prompt with "Password: ", regardless of locale */
+    GETPASS_CLI,
 #endif
-    GUI,     /* Show a graphical password input dialog */
+    GUI, /* Show a graphical password input dialog */
 } PassQueryMethod;
 
 bool method_from_name(PassQueryMethod *out, const char *method_name);

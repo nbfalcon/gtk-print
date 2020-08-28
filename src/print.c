@@ -22,13 +22,10 @@
  * SOFTWARE.
  */
 #include <gtk/gtk.h>
-#include <poppler-document.h>
-#include <poppler-page.h>
 #include <poppler.h>
 #include <print.h>
 #include <prompt_password.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 static void pdf_h_begin_print(GtkPrintOperation *op, GtkPrintContext *ctx_,
@@ -52,10 +49,10 @@ static void pdf_h_draw_page(GtkPrintOperation *op, GtkPrintContext *ctx,
  * @brief Opens the document specified by the GFile as a PopplerDocument. If it
  * is password protected and if @p password is invalid, the function will prompt
  * the user for it with the method specified by @m
- * @param path Path to the file that is to be opened
+ * @param path Path to the file that is to be opened.
  * @param error If opening the document fails and it is not NULL, the error will
  * be stored in this variable.
- * @param m Method used to query the password
+ * @param m Method used to query the password.
  * @param password This password is tried first before asking the user. It may
  * be NULL.
  * @return If the document could be opened successfully, a PopplerDocument* will

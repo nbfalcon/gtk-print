@@ -30,6 +30,8 @@ specified with the '\--password-query-method=[method]' option:
   routine. The user may enter their password in the same terminal in which this
   program was invoked. Note that this option can be disabled at compilation
   time.
+- 'getpass-cli': Like 'getpass', but always prompt with the string "Password: ",
+  regardless of locale or language settings.
 - 'none': Do not query the password, and fail if password if the file is
   encrypted and [password] is incorrect.
   

@@ -33,6 +33,8 @@ bool method_from_name(PassQueryMethod *out, const char *name) {
 #ifdef CONFIG_ENABLE_GETPASS
     else if (strcmp(name, "getpass") == 0)
         *out = GETPASS;
+    else if (strcmp(name, "getpass-cli") == 0)
+        *out = GETPASS_CLI;
 #endif
     else if (strcmp(name, "none") == 0)
         *out = NONE;
@@ -127,6 +129,8 @@ char *document_prompt_password(PassQueryMethod m, const char *document) {
 #ifdef CONFIG_ENABLE_GETPASS
     case GETPASS:
         return getpass(_("Document password: "));
+    case GETPASS_CLI:
+        return getpass("Password: ");
 #endif
     case GUI:
         return gtk_prompt_password(document);
@@ -141,6 +145,7 @@ void free_password(PassQueryMethod m, char *password) {
     switch (m) {
 #ifdef CONFIG_ENABLE_GETPASS
     case GETPASS: /* static buffer */
+    case GETPASS_CLI:
 #endif
     case NONE:    /* no password */
         break;
