@@ -1,0 +1,18 @@
+---
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 79
+---
+Language: Cpp
+
+PointerAlignment: Right
+
+Cpp11BracedListStyle: false
+SpaceBeforeCpp11BracedList: true
+
+FixNamespaceComments: false
+
+BraceWrapping:
+  SplitEmptyRecord: false
+  SplitEmptyFunction: false
+  SplitEmptyNamespace: false

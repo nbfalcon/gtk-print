@@ -1,27 +1,4 @@
-/**
- * MIT License
- *
- * Copyright (c) 2020 Nikita Bloshchanevich
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-#include <glib/gi18n.h> /* _, N_ */
+#include <glib/gi18n.h> /* bindtextdomain, ... */
 #include <gtk/gtk.h>    /* gtk_init_with_args */
 #include <locale.h>     /* setlocale */
 #include <print.h>
@@ -49,57 +26,90 @@ int main(int argc, char **argv) {
 #endif
     static const GOptionEntry options[] = {
         {
-            "password-query-method", 'm', 0, G_OPTION_ARG_STRING,
+            "password-query-method",
+            'm',
+            0,
+            G_OPTION_ARG_STRING,
             &password_input_method,
-            N_("Specify how the password of an encrypted document will be queried. "
+            N_("Specify how the password of an encrypted document will be "
+               "queried. "
                "Defaults to gui. Possible values are:\n"
-               "- 'none': do not query the password and fail if the file is encrypted\n"
-               "- 'getpass': use the POSIX getpass() function to acquire the password\n"
+               "- 'none': do not query the password and fail if the file is "
+               "encrypted\n"
+               "- 'getpass': use the POSIX getpass() function to acquire the "
+               "password\n"
                "- 'getpass-cli': like 'getpass', but with a fixed prompt\n"
                "- 'gui': get the password with a graphical dialog"),
-            N_("method")
+            N_("method"),
         },
         {
-            "password", 'p', 0, G_OPTION_ARG_STRING, &password,
+            "password",
+            'p',
+            0,
+            G_OPTION_ARG_STRING,
+            &password,
             N_("Set a password that is tried before prompting the user."),
-            N_("password")
+            N_("password"),
         },
         {
-            "settings-file", 'P', 0, G_OPTION_ARG_FILENAME,
+            "settings-file",
+            'P',
+            0,
+            G_OPTION_ARG_FILENAME,
             &base_print_settings_file,
-            N_("Set the file to store print settings."), N_("base-settings-file")
+            N_("Set the file to store print settings."),
+            N_("base-settings-file"),
         },
         {
-            "load-settings", 's', 0, G_OPTION_ARG_FILENAME,
+            "load-settings",
+            's',
+            0,
+            G_OPTION_ARG_FILENAME,
             &arg_print_settings_file,
             N_("Set the file from which the print settings will be loaded."),
-            N_("file")
+            N_("file"),
         },
         {
-            "save-settings", 'S', 0, G_OPTION_ARG_FILENAME,
+            "save-settings",
+            'S',
+            0,
+            G_OPTION_ARG_FILENAME,
             &arg_print_settings_output_file,
             N_("Set the file to which the print settings will be saved on a "
                "successful print."),
-            N_("settings")
+            N_("settings"),
         },
         {
-            "always-save-settings", 'A', 0, G_OPTION_ARG_NONE,
+            "always-save-settings",
+            'A',
+            0,
+            G_OPTION_ARG_NONE,
             &always_save_settings,
             N_("Save the print settings even if the user presses \"Cancel\"."),
-            NULL
+            NULL,
         },
         {
-            "action", 'a', 0, G_OPTION_ARG_STRING, &action,
-            N_("Specify what is to be done. Can be either 'print', 'preview' or 'dialog'"),
-            N_("action")
+            "action",
+            'a',
+            0,
+            G_OPTION_ARG_STRING,
+            &action,
+            N_("Specify what is to be done. Can be either 'print', 'preview' "
+               "or 'dialog'"),
+            N_("action"),
         },
 #ifdef CONFIG_ENABLE_FORK
         {
-            "fork", 'F', 0, G_OPTION_ARG_NONE, &should_fork,
-            N_("Fork and exit after opening the specified document."), NULL
+            "fork",
+            'F',
+            0,
+            G_OPTION_ARG_NONE,
+            &should_fork,
+            N_("Fork and exit after opening the specified document."),
+            NULL,
         },
 #endif
-        { NULL }
+        { NULL },
     };
 
     GError *error = NULL;
@@ -132,9 +142,11 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    PopplerDocument *doc = open_document_interactively(argv[1], pass_input, password, &error);
+    PopplerDocument *doc =
+        open_document_interactively(argv[1], pass_input, password, &error);
     if (doc == NULL) {
-        fprintf(stderr, _("error: failed to open document: %s\n"), error->message);
+        fprintf(stderr, _("error: failed to open document: %s\n"),
+                error->message);
         g_error_free(error);
         return 2;
     }
@@ -157,19 +169,19 @@ int main(int argc, char **argv) {
 
     GtkPrintSettings *settings;
     if (print_settings_file != NULL) {
-        settings = gtk_print_settings_new_from_file(print_settings_file, &error);
+        settings =
+            gtk_print_settings_new_from_file(print_settings_file, &error);
         /* if arg_print_settings_(output_)file are both NULL, that means that
          * they got their value from --settings-file: load settings from and
          * save settings to that file. ENOENT is normal in that case, for
          * example on the first run of gtk-print or if the user deletes the
          * settings file. */
-        if (arg_print_settings_file == NULL
-            && arg_print_settings_output_file == NULL
-            && settings == NULL && error->code == G_FILE_ERROR_NOENT) {
+        if (arg_print_settings_file == NULL &&
+            arg_print_settings_output_file == NULL && settings == NULL &&
+            error->code == G_FILE_ERROR_NOENT) {
             g_error_free(error);
             error = NULL;
-        }
-        else if (settings == NULL) {
+        } else if (settings == NULL) {
             g_object_unref(doc);
 
             fprintf(stderr, _("error: failed to load print settings: %s\n"),
@@ -177,8 +189,7 @@ int main(int argc, char **argv) {
             g_error_free(error);
             return 4;
         }
-    }
-    else
+    } else
         settings = gtk_print_settings_new();
 
     GtkPrintOperationAction print_action;
@@ -186,7 +197,8 @@ int main(int argc, char **argv) {
         g_object_unref(doc);
         g_object_unref(settings);
 
-        fprintf(stderr, _("error: failed to parse print action '%s'\n"), action);
+        fprintf(stderr, _("error: failed to parse print action '%s'\n"),
+                action);
         return 5;
     }
 
@@ -206,9 +218,9 @@ int main(int argc, char **argv) {
     else
         puts("cancel");
 
-    if (print_settings_output_file != NULL
-        && (always_save_settings
-            || print_result == GTK_PRINT_OPERATION_RESULT_APPLY)) {
+    if (print_settings_output_file != NULL &&
+        (always_save_settings ||
+         print_result == GTK_PRINT_OPERATION_RESULT_APPLY)) {
         if (!gtk_print_settings_to_file(settings, print_settings_output_file,
                                         &error)) {
             g_object_unref(settings);
