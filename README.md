@@ -6,8 +6,9 @@ print dialog from their scripts.
 
 ## CLI
 The program is invoked as `gtk-print [options...] document`. The program will
-then execute the specified action on document.
-Available actions (specified with the '\--action=[action]' or '-a' option) are:
+then execute the specified action on document (defaulting to a graphical Gtk+
+print-dialog). Available actions (specified with the '\--action=[action]' or
+'-a' option) are:
 
 - 'print': Print the document, without creating an interactive dialog. Options
   may be loaded from a file. The user may be asked for the document's password,
@@ -39,10 +40,13 @@ The initial settings for the print dialog can be loaded from a file. Likewise,
 the user's settings may be written to a file. This can be used to remember the
 user's print settings between invocations, improving the user experience. The
 settings for that is '\--settings-file=[settings-file]'. gtk-print will then
-remember print settings in [settings-file]. It need not exist when gtk-print is
-invoked. If you need more fine grained control, '\--load-settings' and
-'\--save-settings' can be specified additionally, overriding [settings-file] for
-their respective operations. Note that if '\--load-settings' is used, the file
+remember print settings in [settings-file]. If '\--load-settings=[load]' is
+specified with it, gtk-print will first try loading [settings-file], falling
+back to [load], which must exist. This way, you can remember print settings to
+some file, but specify a default set of settings for the first run.
+
+If you need more fine grained control, you can use '\--load-settings' and
+'\--save-settings' instead. Note that if '\--load-settings' is used, the file
 specified by it must already exist. Print settings are only saved if the user
 does not cancel the dialog, unless the '\--always-save-settings' option is
 specified.

@@ -16,9 +16,9 @@ int main(int argc, char **argv) {
 
     static const char *password_input_method = "gui";
     static const char *password = NULL;
-    static const char *base_print_settings_file = NULL;
-    static const char *arg_print_settings_file = NULL;
-    static const char *arg_print_settings_output_file = NULL;
+    static const char *base_settings_file = NULL;
+    static const char *arg_load_settings_file = NULL;
+    static const char *arg_save_settings_file = NULL;
     static gboolean always_save_settings = FALSE;
     static const char *action = "dialog";
 #ifdef CONFIG_ENABLE_FORK
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
             'P',
             0,
             G_OPTION_ARG_FILENAME,
-            &base_print_settings_file,
+            &base_settings_file,
             N_("Set the file to store print settings."),
             N_("base-settings-file"),
         },
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
             's',
             0,
             G_OPTION_ARG_FILENAME,
-            &arg_print_settings_file,
+            &arg_load_settings_file,
             N_("Set the file from which the print settings will be loaded."),
             N_("file"),
         },
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
             'S',
             0,
             G_OPTION_ARG_FILENAME,
-            &arg_print_settings_output_file,
+            &arg_save_settings_file,
             N_("Set the file to which the print settings will be saved on a "
                "successful print."),
             N_("settings"),
@@ -122,12 +122,14 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    const char *print_settings_file = arg_print_settings_file;
-    if (print_settings_file == NULL)
-        print_settings_file = base_print_settings_file;
-    const char *print_settings_output_file = arg_print_settings_output_file;
-    if (print_settings_output_file == NULL)
-        print_settings_output_file = base_print_settings_file;
+    /* If --settings-file is given, we must load from --load-settings only if
+     * the file specified by --settings-file does not exist. */
+    const char *const load_settings_file = (base_settings_file != NULL)
+                                               ? base_settings_file
+                                               : arg_load_settings_file;
+    const char *const save_settings_file = (arg_save_settings_file != NULL)
+                                               ? arg_save_settings_file
+                                               : base_settings_file;
 
     PassQueryMethod pass_input;
     if (!method_from_name(&pass_input, password_input_method)) {
@@ -167,29 +169,43 @@ int main(int argc, char **argv) {
     }
 #endif
 
-    GtkPrintSettings *settings;
-    if (print_settings_file != NULL) {
+    GtkPrintSettings *settings = NULL;
+    if (load_settings_file != NULL) {
         settings =
-            gtk_print_settings_new_from_file(print_settings_file, &error);
-        /* if arg_print_settings_(output_)file are both NULL, that means that
-         * they got their value from --settings-file: load settings from and
-         * save settings to that file. ENOENT is normal in that case, for
-         * example on the first run of gtk-print or if the user deletes the
-         * settings file. */
-        if (arg_print_settings_file == NULL &&
-            arg_print_settings_output_file == NULL && settings == NULL &&
-            error->code == G_FILE_ERROR_NOENT) {
-            g_error_free(error);
-            error = NULL;
-        } else if (settings == NULL) {
-            g_object_unref(doc);
+            gtk_print_settings_new_from_file(load_settings_file, &error);
+        if (settings == NULL) {
+            /* The settings file not existing is normal if --settings-file is
+             * specified. */
+            if (base_settings_file != NULL
+                && error->code == G_FILE_ERROR_NOENT) {
+                g_error_free(error);
+                error = NULL;
 
-            fprintf(stderr, _("error: failed to load print settings: %s\n"),
-                    error->message);
-            g_error_free(error);
-            return 4;
+                /* If --load-settings is specified, we should load the print
+                 * settings from --load-settings instead of using the default
+                 * set obtained from gtk_print_settings_new(). */
+                if (arg_load_settings_file != NULL) {
+                    settings = gtk_print_settings_new_from_file(
+                        arg_load_settings_file, &error);
+                }
+            }
+
+            /* Either loading the settings yielded some strange error or
+             * loading the fallback specified by --load-settings failed. */
+            if (error != NULL) {
+                g_object_unref(doc);
+
+                fprintf(stderr,
+                        _("error: failed to load print settings: %s\n"),
+                        error->message);
+                g_error_free(error);
+                return 4;
+            }
         }
-    } else
+    }
+    /* No settings loading options specified at all or --settings-file failed
+     * to load the settings, successfully */
+    if (settings == NULL)
         settings = gtk_print_settings_new();
 
     GtkPrintOperationAction print_action;
@@ -218,10 +234,10 @@ int main(int argc, char **argv) {
     else
         puts("cancel");
 
-    if (print_settings_output_file != NULL &&
-        (always_save_settings ||
-         print_result == GTK_PRINT_OPERATION_RESULT_APPLY)) {
-        if (!gtk_print_settings_to_file(settings, print_settings_output_file,
+    if (save_settings_file != NULL
+        && (always_save_settings
+            || print_result == GTK_PRINT_OPERATION_RESULT_APPLY)) {
+        if (!gtk_print_settings_to_file(settings, save_settings_file,
                                         &error)) {
             g_object_unref(settings);
 

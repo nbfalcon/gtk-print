@@ -12,6 +12,7 @@ SpaceBeforeCpp11BracedList: true
 
 FixNamespaceComments: false
 
+BreakBeforeBinaryOperators: NonAssignment
 BraceWrapping:
   SplitEmptyRecord: false
   SplitEmptyFunction: false
