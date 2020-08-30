@@ -1,7 +1,8 @@
+#include "print.h"
+#include "prompt_password.h"
+
 #include <gtk/gtk.h>
 #include <poppler.h>
-#include <print.h>
-#include <prompt_password.h>
 #include <stdlib.h>
 
 static void pdf_h_begin_print(GtkPrintOperation *op, GtkPrintContext *ctx_,

@@ -1,7 +1,9 @@
 #include "prompt_password.h"
-#include <glib/gi18n.h> /* bindtextdomain, ... */
-#include <gtk/gtk.h>    /* gtk_init_with_args */
-#include <locale.h>     /* setlocale */
+
+#include "i18n.h"
+
+#include <gtk/gtk.h> /* gtk_init_with_args */
+#include <locale.h>  /* setlocale */
 #include <print.h>
 
 #ifdef CONFIG_ENABLE_FORK
@@ -10,10 +12,12 @@
 #endif
 
 int main(int argc, char **argv) {
+#ifdef CONFIG_ENABLE_I18N
     setlocale(LC_ALL, "");
     bindtextdomain(GETTEXT_PACKAGE, DATADIR "/locale");
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
+#endif
 
     enum ErrorCodes {
         SUCCESS,

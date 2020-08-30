@@ -1,8 +1,9 @@
-#include <glib/gi18n.h>
+#include "prompt_password.h"
+
+#include "i18n.h"
+
 #include <gtk/gtk.h>
-#include <prompt_password.h>
-#include <stdio.h>
-#include <string.h>
+#include <string.h> /* strncpy, (strdup) */
 
 int method_from_name(PassQueryMethod *out, const char *name) {
     if (strcmp(name, "gui") == 0)
