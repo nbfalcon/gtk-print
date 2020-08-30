@@ -43,6 +43,10 @@ static char *dup_str(const char *string) {
 
 static gboolean h_entry_return(GtkAccelGroup *accel_group_, GObject *o_dialog,
                                guint keyval_, GdkModifierType modifier_) {
+    (void)accel_group_;
+    (void)keyval_;
+    (void)modifier_;
+
     GtkDialog *dialog = GTK_DIALOG(o_dialog);
     gtk_dialog_response(dialog, 1);
 

@@ -7,13 +7,17 @@
 
 static void pdf_h_begin_print(GtkPrintOperation *op, GtkPrintContext *ctx_,
                               gpointer poppler_doc) {
+    (void)ctx_;
+
     PopplerDocument *doc = (PopplerDocument *)poppler_doc;
 
     gtk_print_operation_set_n_pages(op, poppler_document_get_n_pages(doc));
 }
 
-static void pdf_h_draw_page(GtkPrintOperation *op, GtkPrintContext *ctx,
+static void pdf_h_draw_page(GtkPrintOperation *op_, GtkPrintContext *ctx,
                             gint page_nr, gpointer poppler_doc) {
+    (void)op_;
+
     PopplerDocument *doc = (PopplerDocument *)poppler_doc;
     cairo_t *cr = gtk_print_context_get_cairo_context(ctx);
 
@@ -36,18 +40,18 @@ static void pdf_h_draw_page(GtkPrintOperation *op, GtkPrintContext *ctx,
  * will be returned. It is a GObject and has one reference, and as such the
  * caller owns it.
  */
-PopplerDocument *open_document_interactively(const char *path,
+PopplerDocument *open_document_interactively(const char *doc_path,
                                              PassQueryMethod m,
                                              const char *password,
                                              GError **result_error) {
-    GFile *in = g_file_new_for_path(path);
+    GFile *in = g_file_new_for_path(doc_path);
 
     GError *err = NULL;
     PopplerDocument *doc =
         poppler_document_new_from_gfile(in, password, NULL, &err);
 
     while (doc == NULL && err->code == POPPLER_ERROR_ENCRYPTED) {
-        char *pass = document_prompt_password(m, path);
+        char *pass = document_prompt_password(m, doc_path);
         if (pass == NULL)
             /* Error must not be freed if there is no password, as in that case
              * the error must be returned to the user

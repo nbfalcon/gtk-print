@@ -1,3 +1,4 @@
+#include "prompt_password.h"
 #include <glib/gi18n.h> /* bindtextdomain, ... */
 #include <gtk/gtk.h>    /* gtk_init_with_args */
 #include <locale.h>     /* setlocale */
@@ -14,13 +15,22 @@ int main(int argc, char **argv) {
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
 
-    static const char *password_input_method = "gui";
+    enum ErrorCodes {
+        SUCCESS,
+        ARGPASE_ERROR,
+        DOCOPEN_FAILED,
+        FORK_FAILED,
+        PRINTING_FAILED,
+        SAVE_PRINT_SETTINGS_FAILED,
+    };
+
+    static const char *password_input_method = NULL;
     static const char *password = NULL;
     static const char *base_settings_file = NULL;
     static const char *arg_load_settings_file = NULL;
     static const char *arg_save_settings_file = NULL;
     static gboolean always_save_settings = FALSE;
-    static const char *action = "dialog";
+    static const char *action = NULL;
 #ifdef CONFIG_ENABLE_FORK
     static gboolean should_fork = FALSE;
 #endif
@@ -119,29 +129,28 @@ int main(int argc, char **argv) {
         fprintf(stderr, _("error: parsing arguments failed: %s\n"),
                 error->message);
         g_error_free(error);
-        return 1;
+        return ARGPASE_ERROR;
     }
 
-    /* If --settings-file is given, we must load from --load-settings only if
-     * the file specified by --settings-file does not exist. */
-    const char *const load_settings_file = (base_settings_file != NULL)
-                                               ? base_settings_file
-                                               : arg_load_settings_file;
-    const char *const save_settings_file = (arg_save_settings_file != NULL)
-                                               ? arg_save_settings_file
-                                               : base_settings_file;
-
-    PassQueryMethod pass_input;
-    if (!method_from_name(&pass_input, password_input_method)) {
+    PassQueryMethod pass_input = GUI;
+    if (password_input_method != NULL
+        && !method_from_name(&pass_input, password_input_method)) {
         fprintf(stderr, _("error: invalid password input method '%s'\n"),
                 password_input_method);
-        return 1;
+        return ARGPASE_ERROR;
     }
 
     const char *program_name = (argc >= 1) ? argv[0] : "gtk-print";
     if (argc != 2) {
         fprintf(stderr, _("usage: %s [options...] document\n"), program_name);
-        return 1;
+        return ARGPASE_ERROR;
+    }
+
+    GtkPrintOperationAction print_action = GTK_PRINT_OPERATION_ACTION_PREVIEW;
+    if (action != NULL && !parse_print_action(&print_action, action)) {
+        fprintf(stderr, _("error: failed to parse print action '%s'\n"),
+                action);
+        return ARGPASE_ERROR;
     }
 
     PopplerDocument *doc =
@@ -150,7 +159,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, _("error: failed to open document: %s\n"),
                 error->message);
         g_error_free(error);
-        return 2;
+        return DOCOPEN_FAILED;
     }
 
 #ifdef CONFIG_ENABLE_FORK
@@ -161,7 +170,7 @@ int main(int argc, char **argv) {
             g_object_unref(doc);
 
             fputs(_("error: fork failed\n"), stderr);
-            return 3;
+            return FORK_FAILED;
         }
 
         if (pid != 0) /* Exit main thread, leaving only the child */
@@ -169,6 +178,11 @@ int main(int argc, char **argv) {
     }
 #endif
 
+    /* If --settings-file is given, we must load from --load-settings only if
+     * the file specified by --settings-file does not exist. */
+    const char *const load_settings_file = (base_settings_file != NULL)
+                                               ? base_settings_file
+                                               : arg_load_settings_file;
     GtkPrintSettings *settings = NULL;
     if (load_settings_file != NULL) {
         settings =
@@ -208,16 +222,6 @@ int main(int argc, char **argv) {
     if (settings == NULL)
         settings = gtk_print_settings_new();
 
-    GtkPrintOperationAction print_action;
-    if (!parse_print_action(&print_action, action)) {
-        g_object_unref(doc);
-        g_object_unref(settings);
-
-        fprintf(stderr, _("error: failed to parse print action '%s'\n"),
-                action);
-        return 5;
-    }
-
     GtkPrintOperationResult print_result =
         print_document(doc, &settings, print_action, &error);
     g_object_unref(doc);
@@ -226,14 +230,15 @@ int main(int argc, char **argv) {
 
         fprintf(stderr, _("error: printing failed: %s\n"), error->message);
         g_error_free(error);
-        return 6;
+        return PRINTING_FAILED;
     }
 
-    if (print_result == GTK_PRINT_OPERATION_RESULT_APPLY)
-        puts("apply");
-    else
-        puts("cancel");
+    puts((print_result == GTK_PRINT_OPERATION_RESULT_APPLY) ? "apply"
+                                                            : "cancel");
 
+    const char *const save_settings_file = (arg_save_settings_file != NULL)
+                                               ? arg_save_settings_file
+                                               : base_settings_file;
     if (save_settings_file != NULL
         && (always_save_settings
             || print_result == GTK_PRINT_OPERATION_RESULT_APPLY)) {
@@ -244,7 +249,7 @@ int main(int argc, char **argv) {
             fprintf(stderr, _("error: failed to save print settings: %s\n"),
                     error->message);
             g_error_free(error);
-            return 7;
+            return SAVE_PRINT_SETTINGS_FAILED;
         }
     }
     g_object_unref(settings);
