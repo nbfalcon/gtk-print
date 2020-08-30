@@ -15,6 +15,6 @@ PopplerDocument *open_document_interactively(const char *doc_path,
                                              const char *password,
                                              GError **result_error);
 
-bool parse_print_action(GtkPrintOperationAction *action, const char *name);
+int parse_print_action(GtkPrintOperationAction *action, const char *name);
 
 #endif

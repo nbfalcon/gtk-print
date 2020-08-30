@@ -2,7 +2,6 @@
 #include <poppler.h>
 #include <print.h>
 #include <prompt_password.h>
-#include <stdbool.h>
 #include <stdlib.h>
 
 static void pdf_h_begin_print(GtkPrintOperation *op, GtkPrintContext *ctx_,
@@ -106,7 +105,7 @@ GtkPrintOperationResult print_document(PopplerDocument *doc,
     return print_result;
 }
 
-bool parse_print_action(GtkPrintOperationAction *action, const char *name) {
+int parse_print_action(GtkPrintOperationAction *action, const char *name) {
     if (strcmp(name, "print") == 0)
         *action = GTK_PRINT_OPERATION_ACTION_PRINT;
     else if (strcmp(name, "dialog") == 0)
@@ -114,7 +113,7 @@ bool parse_print_action(GtkPrintOperationAction *action, const char *name) {
     else if (strcmp(name, "preview") == 0)
         *action = GTK_PRINT_OPERATION_ACTION_PREVIEW;
     else
-        return false;
+        return 0;
 
-    return true;
+    return 1;
 }

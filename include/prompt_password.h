@@ -1,8 +1,6 @@
 #ifndef PROMPT_PASSWORD_H
 #define PROMPT_PASSWORD_H
 
-#include <stdbool.h>
-
 typedef enum {
     NONE, /* Don't ask the user for the password and just quit */
 #ifdef CONFIG_ENABLE_GETPASS
@@ -13,7 +11,7 @@ typedef enum {
     GUI, /* Show a graphical password input dialog */
 } PassQueryMethod;
 
-bool method_from_name(PassQueryMethod *out, const char *method_name);
+int method_from_name(PassQueryMethod *out, const char *method_name);
 
 char *gtk_prompt_password(const char *document);
 

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-bool method_from_name(PassQueryMethod *out, const char *name) {
+int method_from_name(PassQueryMethod *out, const char *name) {
     if (strcmp(name, "gui") == 0)
         *out = GUI;
 #ifdef CONFIG_ENABLE_GETPASS
@@ -16,9 +16,9 @@ bool method_from_name(PassQueryMethod *out, const char *name) {
     else if (strcmp(name, "none") == 0)
         *out = NONE;
     else
-        return false;
+        return 0;
 
-    return true;
+    return 1;
 }
 
 #ifdef CONFIG_USE_STRDUP
