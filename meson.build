@@ -1,22 +1,22 @@
 project('gtk-print', 'c', default_options : ['c_std=c89'],
-                          license : 'MIT', meson_version : '>=0.55.0')
+        license : 'MIT', meson_version : '>=0.55.0')
 
 if get_option('enable-fork')
-   add_project_arguments('-DCONFIG_ENABLE_FORK=1', language : 'c')
+  add_project_arguments('-DCONFIG_ENABLE_FORK=1', language : 'c')
 endif
 if get_option('enable-getpass')
-   add_project_arguments('-DCONFIG_ENABLE_GETPASS=1', language : 'c')
+  add_project_arguments('-DCONFIG_ENABLE_GETPASS=1', language : 'c')
 endif
 
 if get_option('enable-i18n')
-   subdir('po')
+  subdir('po')
 
-   add_project_arguments('-DCONFIG_ENABLE_I18N=1', language : 'c')
+  add_project_arguments('-DCONFIG_ENABLE_I18N=1', language : 'c')
 endif
 
 if get_option('use-strdup')
-   add_project_arguments('-DCONFIG_USE_STRDUP=1', '-D_POSIX_C_SOURCE=200809L',
-                         language : 'c' )
+  add_project_arguments('-DCONFIG_USE_STRDUP=1', '-D_POSIX_C_SOURCE=200809L',
+                        language : 'c' )
 endif
 
 add_project_arguments('-DDATADIR="@0@"'.format(get_option('datadir')),
