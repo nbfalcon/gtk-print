@@ -14,7 +14,7 @@
 int main(int argc, char **argv) {
 #ifdef CONFIG_ENABLE_I18N
     setlocale(LC_ALL, "");
-    bindtextdomain(GETTEXT_PACKAGE, DATADIR "/locale");
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
 #endif

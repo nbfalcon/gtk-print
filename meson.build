@@ -10,7 +10,6 @@ endif
 
 if get_option('enable-i18n')
   subdir('po')
-
   add_project_arguments('-DCONFIG_ENABLE_I18N=1', language : 'c')
 endif
 
@@ -31,4 +30,5 @@ deps = [gtk_dep, poppler_data_dep, poppler_glib_dep]
 
 incdirs = include_directories('include')
 
-executable('gtk-print', src, dependencies : deps, include_directories : incdirs)
+executable('gtk-print', src, dependencies : deps, include_directories : incdirs,
+           install : true)

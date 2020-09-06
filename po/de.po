@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gtk-print\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-28 18:05+0200\n"
-"PO-Revision-Date: 2020-08-28 18:06+0200\n"
+"PO-Revision-Date: 2020-09-04 15:26+0200\n"
 "Last-Translator: Nikita Bloshchanevich <nikblos@outlook.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -116,7 +116,7 @@ msgstr "Verwendung: %s [Optionen...] [Dokument]\n"
 #: src/main.c:137
 #, c-format
 msgid "error: failed to open document: %s\n"
-msgstr "Fehler: Das Dokument konnte nicht geöffnet werden: %s"
+msgstr "Fehler: Das Dokument konnte nicht geöffnet werden: %s\n"
 
 #: src/main.c:149
 msgid "error: fork failed\n"
@@ -125,12 +125,12 @@ msgstr "Fehler: fork() scheiterte\n"
 #: src/main.c:175
 #, c-format
 msgid "error: failed to load print settings: %s\n"
-msgstr "Fehler: Die Druckeinstellungen konnten nicht geladen werden: %s"
+msgstr "Fehler: Die Druckeinstellungen konnten nicht geladen werden: %s\n"
 
 #: src/main.c:189
 #, c-format
 msgid "error: failed to parse print action '%s'\n"
-msgstr "Fehler: Die Druckaktion '%s' ist unbekannt."
+msgstr "Fehler: Die Druckaktion '%s' ist unbekannt.\n"
 
 #: src/main.c:199
 #, c-format
@@ -140,7 +140,7 @@ msgstr "Fehler: Das Drucken scheiterte: %s\n"
 #: src/main.c:216
 #, c-format
 msgid "error: failed to save print settings: %s\n"
-msgstr "Fehler: Die Druckeinstellungen konnten nicht gespeichert werden: %s"
+msgstr "Fehler: Die Druckeinstellungen konnten nicht gespeichert werden: %s\n"
 
 #: src/prompt_password.c:79
 msgid "Password required"
