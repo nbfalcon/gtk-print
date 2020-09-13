@@ -150,7 +150,7 @@ int main(int argc, char **argv) {
         return ARGPASE_ERROR;
     }
 
-    GtkPrintOperationAction print_action = GTK_PRINT_OPERATION_ACTION_PREVIEW;
+    GtkPrintOperationAction print_action = GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG;
     if (action != NULL && !parse_print_action(&print_action, action)) {
         fprintf(stderr, _("error: failed to parse print action '%s'\n"),
                 action);
