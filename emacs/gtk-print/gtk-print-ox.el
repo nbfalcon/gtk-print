@@ -30,8 +30,9 @@ Set to nil to not remember print dialog settings between exports."
 Internally, it first exports the current org file via
 org-latex-export-to-pdf, and then prints it. ARGS are passed
 verbatim to `org-latex-export-to-pdf'."
-  (gtk-print-file (apply #'org-latex-export-to-pdf args)
-                  gtk-print-ox-print-settings-file))
+  (gtk-print-file-async (apply #'org-latex-export-to-pdf args)
+                        #'gtk-print-file-async-message-cb
+                        gtk-print-ox-print-settings-file))
 
 (defconst gtk-print-ox--menuentry
   '((?P "As PDF file and print" gtk-print-ox-export-to-pdf-print))

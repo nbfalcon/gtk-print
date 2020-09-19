@@ -23,7 +23,7 @@ print settings in. By default, the generated command specifies
               (concat " --settings-file="
                       (shell-quote-argument (expand-file-name settings-file)))
             "")
-          file))
+          (shell-quote-argument file)))
 
 ;;;###autoload
 (defun gtk-print-file (file &optional settings-file)
@@ -41,19 +41,22 @@ cannot handle encrypted files, which will just fail."
   (call-process-shell-command
    (gtk-print--file-shell-command file settings-file)))
 
+(defun gtk-print-file-async-message-cb (result)
+  "Print callback that messages the user with the status.
+RESULT is the argument from `gtk-print-file-async'."
+  (message "Print file: %s"
+           (pcase result (:apply "apply") (:cancel "cancel") (m m))))
+
 ;;;###autoload
 (defun gtk-print-file-async (file finish-callback &optional settings-file)
   "Like `gtk-print-file', but non-blocking.
 After gtk-print finishes, call FINISH-CALLBACK accordingly.
 FINISH-CALLBACK takes one argument: a status. It can be either
 :accept or :cancel, representing the user's print dialog choice.
-The second argument may be nil if gtk-print prints a strange
-status. The semantics of FILE and SETTINGS-FILE are the same."
+If an unknown choice is presented, the string is passed as
+argument. The semantics of FILE and SETTINGS-FILE are the same."
   (interactive (list (read-file-name "Print file: ")
-                     (lambda (status) (pcase status
-                                        (:apply (message "apply"))
-                                        (:cancel (message "cancel"))
-                                        (_ nil)))))
+                     #'gtk-print-file-async-message-cb))
   (set-process-sentinel
    (start-process-shell-command
     "gtk-print"
@@ -66,7 +69,7 @@ status. The semantics of FILE and SETTINGS-FILE are the same."
                   (pcase (buffer-string)
                     ("apply\n" :accept)
                     ("cancel\n" :cancel)
-                    (_ nil)))
+                    (_ (buffer-string))))
          (kill-buffer))))))
 
 (defun gtk-print-tempfile (file &optional settings-file)
