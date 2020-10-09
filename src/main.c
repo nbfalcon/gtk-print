@@ -150,7 +150,8 @@ int main(int argc, char **argv) {
         return ARGPASE_ERROR;
     }
 
-    GtkPrintOperationAction print_action = GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG;
+    GtkPrintOperationAction print_action =
+        GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG;
     if (action != NULL && !parse_print_action(&print_action, action)) {
         fprintf(stderr, _("error: failed to parse print action '%s'\n"),
                 action);
@@ -188,37 +189,34 @@ int main(int argc, char **argv) {
                                                ? base_settings_file
                                                : arg_load_settings_file;
     GtkPrintSettings *settings = NULL;
-    if (load_settings_file != NULL) {
-        settings =
-            gtk_print_settings_new_from_file(load_settings_file, &error);
-        if (settings == NULL) {
-            /* The settings file not existing is normal if --settings-file is
-             * specified. */
-            if (base_settings_file != NULL
-                && error->code == G_FILE_ERROR_NOENT) {
-                g_error_free(error);
-                error = NULL;
+    if (load_settings_file != NULL
+        && (settings =
+                gtk_print_settings_new_from_file(load_settings_file, &error))
+               == NULL) {
+        /* The settings file not existing is normal if --settings-file is
+         * specified. */
+        if (base_settings_file != NULL && error->code == G_FILE_ERROR_NOENT) {
+            g_error_free(error);
+            error = NULL;
 
-                /* If --load-settings is specified, we should load the print
-                 * settings from --load-settings instead of using the default
-                 * set obtained from gtk_print_settings_new(). */
-                if (arg_load_settings_file != NULL) {
-                    settings = gtk_print_settings_new_from_file(
-                        arg_load_settings_file, &error);
-                }
+            /* If --load-settings is specified, we should load the print
+             * settings from --load-settings instead of using the default
+             * set obtained from gtk_print_settings_new(). */
+            if (arg_load_settings_file != NULL) {
+                settings = gtk_print_settings_new_from_file(
+                    arg_load_settings_file, &error);
             }
+        }
 
-            /* Either loading the settings yielded some strange error or
-             * loading the fallback specified by --load-settings failed. */
-            if (error != NULL) {
-                g_object_unref(doc);
+        /* Either loading the settings yielded some strange error or
+         * loading the fallback specified by --load-settings failed. */
+        if (error != NULL) {
+            g_object_unref(doc);
 
-                fprintf(stderr,
-                        _("error: failed to load print settings: %s\n"),
-                        error->message);
-                g_error_free(error);
-                return 4;
-            }
+            fprintf(stderr, _("error: failed to load print settings: %s\n"),
+                    error->message);
+            g_error_free(error);
+            return 4;
         }
     }
     /* No settings loading options specified at all or --settings-file failed
@@ -245,16 +243,15 @@ int main(int argc, char **argv) {
                                                : base_settings_file;
     if (save_settings_file != NULL
         && (always_save_settings
-            || print_result == GTK_PRINT_OPERATION_RESULT_APPLY)) {
-        if (!gtk_print_settings_to_file(settings, save_settings_file,
-                                        &error)) {
-            g_object_unref(settings);
+            || print_result == GTK_PRINT_OPERATION_RESULT_APPLY)
+        && (!gtk_print_settings_to_file(settings, save_settings_file,
+                                        &error))) {
+        g_object_unref(settings);
 
-            fprintf(stderr, _("error: failed to save print settings: %s\n"),
-                    error->message);
-            g_error_free(error);
-            return SAVE_PRINT_SETTINGS_FAILED;
-        }
+        fprintf(stderr, _("error: failed to save print settings: %s\n"),
+                error->message);
+        g_error_free(error);
+        return SAVE_PRINT_SETTINGS_FAILED;
     }
     g_object_unref(settings);
 
