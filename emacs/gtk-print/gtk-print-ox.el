@@ -5,11 +5,7 @@
 
 ;;; Code:
 
-(require 'ox)
-(require 'ox-latex)
 (require 'cl-lib)
-
-(require 'gtk-print)
 
 (defcustom gtk-print-ox-print-settings-file
   (locate-user-emacs-file "gtk-print-ox.printsettings")
@@ -28,8 +24,14 @@ Set to nil to not remember print dialog settings between exports."
 (defun gtk-print-ox-export-to-pdf-print (&rest args)
   "`gtk-print' based org export function.
 Internally, it first exports the current org file via
-org-latex-export-to-pdf, and then prints it. ARGS are passed
+`org-latex-export-to-pdf', and then prints it. ARGS are passed
 verbatim to `org-latex-export-to-pdf'."
+  (require 'gtk-print)
+  (declare-function gtk-print-file-async "gtk-print"
+                    (f finish-cb &optional settings-f))
+  (declare-function gtk-print-file-async-message-cb "gtk-print" (arg))
+  (require 'ox-latex)
+  (declare-function org-latex-export-to-pdf "ox-latex")
   (gtk-print-file-async (apply #'org-latex-export-to-pdf args)
                         #'gtk-print-file-async-message-cb
                         gtk-print-ox-print-settings-file))
@@ -41,11 +43,16 @@ It a list of entries to make it usable with `nconc'.")
 
 (defun gtk-print-ox-latex-exporter-p (backend)
   "Return t if BACKEND is an ox-latex exporter, and nil otherwise.
-BACKEND must be an instance of struct `org-export-backend'."
+BACKEND must be an instance of struct `org-export-backend'.
+
+`ox' must already be loaded when this functino is called."
+  (declare-function org-export-backend-name "ox")
   (string= (org-export-backend-name backend) "latex"))
 
 (defun gtk-print-ox-find-latex-exporter ()
-  "Return the ox-latex backend, or nil if it is not registered."
+  "Find the `ox-latex' backend.
+`ox' must already be loaded when this is called."
+  (defvar org-export-registered-backends)
   (cl-find-if #'gtk-print-ox-latex-exporter-p org-export-registered-backends))
 
 (defun gtk-print-ox-inject ()
@@ -55,6 +62,10 @@ This function can be called multiple times. However, be wary that
 problems could arise if called interleaved with similar injector
 functions from other plugins. To undo the effects of this
 function, call `gtk-print-ox-remove'."
+  ;; don't break non-lazy configs
+  (require 'ox)
+  (declare-function org-export-backend-menu "ox")
+  (require 'ox-latex)
   (when-let ((latex-exporter (gtk-print-ox-find-latex-exporter)))
     (nconc (nth 2 (org-export-backend-menu latex-exporter))
            gtk-print-ox--menuentry)
@@ -81,13 +92,10 @@ and nil otherwise."
   "Wraps `gtk-print-ox-inject' and `gtk-print-ox-remove'.
 You should use this instead of `gtk-print-ox-inject' and
 `gtk-print-ox-remove' directly, as using minor modes for
-controlling Boolean state is more idiomatic.
-
-I did not use a globalized minor mode in the first place because
-they were unknown to me at the time I wrote this module."
-  :init-value nil
-  :lighter nil
+controlling Boolean state is more idiomatic."
   :global t
+  :init-value nil
+  :group 'gtk-print-ox
   (if gtk-print-ox-mode
       (gtk-print-ox-inject)
     (gtk-print-ox-remove)))

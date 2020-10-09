@@ -45,7 +45,7 @@ cannot handle encrypted files, which will just fail."
   "Print callback that messages the user with the status.
 RESULT is the argument from `gtk-print-file-async'."
   (message "Print file: %s"
-           (pcase result (:apply "apply") (:cancel "cancel") (m m))))
+           (pcase result (:accept "accept") (:cancel "cancel") (m m))))
 
 ;;;###autoload
 (defun gtk-print-file-async (file finish-callback &optional settings-file)
