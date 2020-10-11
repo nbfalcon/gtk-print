@@ -11,14 +11,14 @@ PATH lookup is performed on `gtk-print-command'."
   :type 'string
   :group 'gtk-print)
 
-(defun gtk-print--file-shell-command (file &optional settings-file disable-fork)
+(defun gtk-print--file-shell-command (file &optional settings-file fork)
   "Build a gtk-print shell command.
 FILE is the file to print and SETTINGS-FILE is the file to store
-print settings in. By default, the generated command specifies
---fork. To inhibit that behaviour, set DISABLE-FORK to t."
+print settings in. If FORK is true, add specify the \"--fork\"
+option."
   (format "%s%s --password-query-method=none%s -- %s"
           (shell-quote-argument gtk-print-command)
-          (if (or disable-fork (eq system-type 'windows-nt)) "" " --fork")
+          (if fork " --fork" "")
           (if settings-file
               (concat " --settings-file="
                       (shell-quote-argument (expand-file-name settings-file)))
@@ -39,7 +39,7 @@ This family of functions currently has the limitation that it
 cannot handle encrypted files, which will just fail."
   (interactive (list (read-file-name "Print file: ")))
   (call-process-shell-command
-   (gtk-print--file-shell-command file settings-file)))
+   (gtk-print--file-shell-command file settings-file t)))
 
 (defun gtk-print-file-async-message-cb (result)
   "Print callback that messages the user with the status.
@@ -61,7 +61,7 @@ argument. The semantics of FILE and SETTINGS-FILE are the same."
    (start-process-shell-command
     "gtk-print"
     (generate-new-buffer " *gtk-print*")
-    (gtk-print--file-shell-command file settings-file t))
+    (gtk-print--file-shell-command file settings-file))
    (lambda (proc ev)
      (when (string= ev "finished\n")
        (with-current-buffer (process-buffer proc)
